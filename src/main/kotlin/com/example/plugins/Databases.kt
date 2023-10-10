@@ -23,33 +23,33 @@ fun Application.configureDatabases() {
     routing {
 
 
-        // Create city
-//        post("/cities") {
-//            val city = call.receive<City>()
-//            val id = cityService.create(city)
+//        // Create user
+//        post("/users") {
+//            val user = call.receive<ExposedUser>()
+//            val id = userService.create(user)
 //            call.respond(HttpStatusCode.Created, id)
 //        }
-//        // Read city
-//        get("/cities/{id}") {
+//        // Read user
+//        get("/users/{id}") {
 //            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-//            try {
-//                val city = cityService.read(id)
-//                call.respond(HttpStatusCode.OK, city)
-//            } catch (e: Exception) {
+//            val user = userService.read(id)
+//            if (user != null) {
+//                call.respond(HttpStatusCode.OK, user)
+//            } else {
 //                call.respond(HttpStatusCode.NotFound)
 //            }
 //        }
-//        // Update city
-//        put("/cities/{id}") {
+//        // Update user
+//        put("/users/{id}") {
 //            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-//            val user = call.receive<City>()
-//            cityService.update(id, user)
+//            val user = call.receive<ExposedUser>()
+//            userService.update(id, user)
 //            call.respond(HttpStatusCode.OK)
 //        }
-//        // Delete city
-//        delete("/cities/{id}") {
+//        // Delete user
+//        delete("/users/{id}") {
 //            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-//            cityService.delete(id)
+//            userService.delete(id)
 //            call.respond(HttpStatusCode.OK)
 //        }
     }
