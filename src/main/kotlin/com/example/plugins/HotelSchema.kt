@@ -76,8 +76,14 @@ class HotelService {
             }
         }
 
-        suspend fun create() {
-
+        suspend fun create(booking: ExposedBookings): Int = dbQuery {
+            Bookings.insert {
+                it[user_id] = booking.userId
+                it[room_id] = booking.roomId
+                it[check_in_date] = booking.checkInDate
+                it[check_out_date] = booking.checkInDate
+                it[status] = booking.status
+            }[Bookings.id].value
         }
 
         suspend fun update(id: Int, bookings: ExposedBookings) {
@@ -103,9 +109,11 @@ class HotelService {
         suspend fun read(id: Int): ExposedHotelRooms? {
             return dbQuery {
                 HotelRooms.select { HotelRooms.id eq id }.map {
-                    ExposedHotelRooms(
-                        it[HotelRooms.name], it[HotelRooms.room_type_id], it[HotelRooms.room_image]
-                    )
+                    it[HotelRooms.room_image]?.let { it1 ->
+                        ExposedHotelRooms(
+                            it[HotelRooms.name], it[HotelRooms.room_type_id], it1
+                        )
+                    }
                 }.singleOrNull()
             }
         }

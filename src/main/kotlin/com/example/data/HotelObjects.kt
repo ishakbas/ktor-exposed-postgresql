@@ -52,7 +52,7 @@ object RoomTypes : IntIdTable("room_types") {
 object HotelRooms : IntIdTable("hotel_rooms") {
     val name = varchar("name", 50)
     val room_type_id = integer("room_type_id")
-    val room_image = binary("room_image")
+    val room_image = binary("room_image").nullable()
 }
 
 object Users : IntIdTable("users") {
