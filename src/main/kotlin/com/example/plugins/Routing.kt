@@ -21,9 +21,7 @@ fun Application.configureRouting() {
 
 const val invalidId = "Invalid ID"
 fun Route.users() {
-
     val userService = HotelService.UserRepository()
-
     route("/user/") {
         route("{id}") {
 
@@ -122,7 +120,7 @@ fun Route.roomTypes() {
 
 fun Routing.bookings() {
     val bookingService = HotelService.BookingsRepository()
-    route("/bookings/") {
+    route("/booking/") {
         route("{id}") {
             get {
                 val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(invalidId)
@@ -144,10 +142,10 @@ fun Routing.bookings() {
                 call.respond(HttpStatusCode.OK)
             }
         }
-    }
-    post {
-        val booking = call.receive<ExposedBookings>()
-        val id = bookingService.create(booking)
-        call.respond(HttpStatusCode.Created, id)
+        post {
+            val booking = call.receive<ExposedBookings>()
+            val id = bookingService.create(booking)
+            call.respond(HttpStatusCode.Created, id)
+        }
     }
 }

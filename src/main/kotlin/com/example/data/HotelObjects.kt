@@ -30,10 +30,10 @@ data class ExposedUsers(
 
 @Serializable
 data class ExposedBookings(
-    val userId: Int,
-    val roomId: Int,
-    val checkInDate: LocalDate,
-    val checkOutDate: LocalDate,
+    val user_id: Int,
+    val room_id: Int,
+    val check_in_date: LocalDate,
+    val check_out_date: LocalDate,
     val status: String?
 )
 object Bookings : IntIdTable("bookings") {
