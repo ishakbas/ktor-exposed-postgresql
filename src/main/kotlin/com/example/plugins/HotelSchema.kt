@@ -18,15 +18,16 @@ class HotelService {
     }
 
     class UserRepository {
+
+        suspend fun login(user: ExposedUsers): Boolean = dbQuery {
+            Users.select { Users.login eq user.login and (Users.password eq user.password) }.count() > 0
+        }
         suspend fun read(id: Int): ExposedUsers? {
             return dbQuery {
                 Users.select { Users.id eq id }.map {
                     ExposedUsers(
                         it[Users.login],
                         it[Users.password],
-                        it[Users.first_name],
-                        it[Users.last_name],
-                        it[Users.email]
                     )
                 }.singleOrNull()
             }
@@ -36,9 +37,6 @@ class HotelService {
             Users.insert {
                 it[login] = user.login
                 it[password] = user.password
-                it[first_name] = user.firstName
-                it[last_name] = user.lastName
-                it[email] = user.email
             }[Users.id].value
         }
 
@@ -47,9 +45,6 @@ class HotelService {
                 Users.update({ Users.id eq id }) {
                     it[login] = user.login
                     it[password] = user.password
-                    it[first_name] = user.firstName
-                    it[last_name] = user.lastName
-                    it[email] = user.email
                 }
             }
         }
@@ -109,12 +104,20 @@ class HotelService {
         suspend fun read(id: Int): ExposedHotelRooms? {
             return dbQuery {
                 HotelRooms.select { HotelRooms.id eq id }.map {
-                    it[HotelRooms.room_image]?.let { it1 ->
-                        ExposedHotelRooms(
-                            it[HotelRooms.name], it[HotelRooms.room_type_id], it1
-                        )
-                    }
+                    ExposedHotelRooms(
+                        it[HotelRooms.name], it[HotelRooms.room_type_id], it[HotelRooms.room_image]
+                    )
                 }.singleOrNull()
+            }
+        }
+
+        suspend fun readAll(): List<ExposedHotelRooms> {
+            return dbQuery {
+                HotelRooms.selectAll().map {
+                    ExposedHotelRooms(
+                        it[HotelRooms.name], it[HotelRooms.room_type_id], it[HotelRooms.room_image]
+                    )
+                }
             }
         }
 
@@ -173,4 +176,5 @@ class HotelService {
             }
         }
     }
+
 }

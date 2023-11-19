@@ -16,16 +16,13 @@ data class ExposedRoomTypes(
 data class ExposedHotelRooms(
     val name: String,
     val roomTypeId: Int,
-    val room_image: ByteArray
+    val room_image: ByteArray?
 )
 
 @Serializable
 data class ExposedUsers(
     val login: String,
     val password: String,
-    val firstName: String,
-    val lastName: String?,
-    val email: String?
 )
 
 @Serializable
@@ -58,7 +55,4 @@ object HotelRooms : IntIdTable("hotel_rooms") {
 object Users : IntIdTable("users") {
     val login = varchar("login", 50)
     val password = varchar("password", 50)
-    val first_name = varchar("first_name", 50)
-    val last_name = varchar("last_name", 50).nullable()
-    val email = varchar("email", 100).nullable()
 }

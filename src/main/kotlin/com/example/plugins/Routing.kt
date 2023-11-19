@@ -64,6 +64,12 @@ fun Route.rooms() {
             val id = roomService.create(room)
             call.respond(HttpStatusCode.Created, id)
         }
+        route("all") {
+            get {
+                val rooms = roomService.readAll()
+                call.respond(HttpStatusCode.OK, rooms)
+            }
+        }
         route("{id}") {
             get {
                 val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(invalidId)
