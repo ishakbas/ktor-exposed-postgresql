@@ -9,6 +9,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 
 fun Application.configureRouting() {
     routing {
@@ -24,7 +25,6 @@ fun Route.users() {
     val userService = HotelService.UserRepository()
     route("/user/") {
         route("{id}") {
-
             get {
                 val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(invalidId)
                 val user = userService.read(id)
@@ -47,11 +47,32 @@ fun Route.users() {
                 call.respond(HttpStatusCode.OK, "user $id was deleted")
             }
         }
+        route("login") {
+            post {
+                val user = call.receive<ExposedUsers>()
+                val wasFound = userService.login(user)
+                if (wasFound) {
+                    call.respond(HttpStatusCode.Found, "User was found")
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "User wasn't found")
+                }
+            }
+        }
+        route("register") {
+            post {
+                val user = call.receive<ExposedUsers>()
+                if (userService.login(user)) {
 
-        post {
-            val user = call.receive<ExposedUsers>()
-            val id = userService.create(user)
-            call.respond(HttpStatusCode.Created, id)
+                } else {
+                    val id: Int
+                    try {
+                        id = userService.create(user)
+                        call.respond(HttpStatusCode.Created, id)
+                    } catch (ex: ExposedSQLException) {
+                        call.respond(HttpStatusCode.InternalServerError, ex.cause.toString())
+                    }
+                }
+            }
         }
     }
 }
